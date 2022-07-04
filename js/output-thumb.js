@@ -25,10 +25,12 @@ export const getOutputThumb = () => {
 
     const picTagSpanComments = document.createElement('span');
     picTagSpanComments.classList.add('picture__comments');
+    picTagSpanComments.textContent = el.comments.length;
     picTagPInfo.append(picTagSpanComments);
 
     const picTagSpanLikes = document.createElement('span');
     picTagSpanLikes.classList.add('picture__likes');
+    picTagSpanLikes.textContent = el.likes;
     picTagPInfo.append(picTagSpanLikes);
 
     picFragment.append(picTagA);
