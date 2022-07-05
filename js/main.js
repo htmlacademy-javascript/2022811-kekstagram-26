@@ -1,5 +1,3 @@
-import fotoDescArr from './data.js';
+import { getOutputThumb } from './output-thumb.js';
 
-// Чтобы не ругался ESLint
-const photoIdFunc = (id) => id;
-photoIdFunc(fotoDescArr[0]);
+getOutputThumb();
