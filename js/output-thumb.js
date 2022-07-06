@@ -1,9 +1,12 @@
 import { fotoDescArr } from './data.js';
 
-export const getOutputThumb = () => {
+export const renderOutputThumb = () => {
 
   const picTemplate = document.getElementById('picture');
   const picFragment = document.createDocumentFragment();
+  const picContainer = document.querySelector('.pictures');
+
+  console.log(picContainer);
 
   fotoDescArr.forEach((el) => {
 
@@ -34,9 +37,9 @@ export const getOutputThumb = () => {
     picTagPInfo.append(picTagSpanLikes);
 
     picFragment.append(picTagA);
-
+    
   });
 
-  picTemplate.append(picFragment);
+  picContainer.append(picFragment);
 
 };

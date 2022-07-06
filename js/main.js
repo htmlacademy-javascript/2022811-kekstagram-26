@@ -1,3 +1,3 @@
-import { getOutputThumb } from './output-thumb.js';
+import { renderOutputThumb } from './output-thumb.js';
 
-getOutputThumb();
+renderOutputThumb();
