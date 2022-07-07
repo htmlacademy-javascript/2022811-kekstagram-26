@@ -40,3 +40,4 @@ export const renderOutputThumb = () => {
   picContainer.append(picFragment);
 
 };
+
