@@ -2,7 +2,7 @@ import { randomInt } from './util.js';
 import { mockNames } from './mock-names.js';
 import { randomСomment } from './random-comment.js';
 
-export const fotoDescArr = [
+export const picDescArr = [
   {
     id: 1,
     url: 'photos/1.jpg',
