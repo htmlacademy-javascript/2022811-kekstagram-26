@@ -10,7 +10,7 @@ export const renderOutputPicThumb = () => {
     const picTagA = document.createElement('a');
     picTagA.setAttribute('href', '#');
     picTagA.classList.add('picture');
-    picTagA.setAttribute("data-id", el.id);
+    picTagA.setAttribute('data-id', el.id);
 
     const picTagImg = document.createElement('img');
     picTagImg.classList.add('picture__img');
