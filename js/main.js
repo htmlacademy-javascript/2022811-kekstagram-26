@@ -1,5 +1,2 @@
 import './gallery.js';
-import { showUploadPicForm } from './upload-pic-form.js';
-
-
-
+import './upload-pic-form.js';
