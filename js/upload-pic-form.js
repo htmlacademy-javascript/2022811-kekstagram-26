@@ -30,13 +30,24 @@ export const showUploadPicForm = () => {
   });
 
   picFormPopupUploadBtn.addEventListener('click', (e) => {
+
+    e.preventDefault();
+
     const re = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
-    if (re.test(picFormPopupHashtags.value) === false) {
+    const picFormPopupHashtagsVal = picFormPopupHashtags.value.split(' ');
+
+    if (picFormPopupHashtagsVal.length > 0 && picFormPopupHashtagsVal.length <= 5) {
+      picFormPopupHashtagsVal.forEach((el) => {
+        if (re.test(el) === false) {
+          e.preventDefault();
+        }
+      });
+    }
+
+    if (picFormPopupDesc < 2 || picFormPopupDesc > 140) {
       e.preventDefault();
     }
-    if (picFormPopupDesc < 2 && picFormPopupDesc > 140) {
-      e.preventDefault();
-    }
+
   });
 
 };
