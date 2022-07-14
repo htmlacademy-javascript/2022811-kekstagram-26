@@ -29,7 +29,7 @@ export const showUploadPicForm = () => {
     }
   });
 
-  picFormPopupUploadBtn.addEventListener('click', (e) => {
+  picFormPopupUploadBtn.addEventListener('submit', (e) => {
 
     e.preventDefault();
 
