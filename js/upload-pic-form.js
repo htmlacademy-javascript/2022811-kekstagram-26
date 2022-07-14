@@ -31,8 +31,6 @@ export const showUploadPicForm = () => {
 
   picFormPopupUploadBtn.addEventListener('submit', (e) => {
 
-    e.preventDefault();
-
     const re = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
     const picFormPopupHashtagsVal = picFormPopupHashtags.value.split(' ');
 
