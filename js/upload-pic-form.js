@@ -71,12 +71,14 @@ export const showUploadPicForm = () => {
   });
 
   const picFormPopupEffectsList = document.querySelectorAll('#upload-select-image .effects__list input');
+  const picFormPopupEffectsVal = document.querySelector('#upload-select-image .effect-level__value');
 
   picFormPopupEffectsList.forEach((el) => {
 
     el.addEventListener('click', (e) => {
       picFormPopupPreview.removeAttribute('class');
       picFormPopupPreview.classList.add(`effects__preview--${e.target.value}`);
+      picFormPopupEffectsVal.value = `effects__preview--${e.target.value}`;
     });
 
   });
