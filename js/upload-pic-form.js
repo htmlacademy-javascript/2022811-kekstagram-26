@@ -48,6 +48,39 @@ export const showUploadPicForm = () => {
 
   });
 
+  const picFormPopupScaleFieldset = document.querySelector('#upload-select-image .img-upload__scale');
+  const picFormPopupScaleVal = document.querySelector('#upload-select-image .scale__control--value');
+  let picFormPopupScaleBaseVal = Number(picFormPopupScaleVal.value.slice(0, -1));
+  let picFormPopupScaleFinalVal;
+
+  picFormPopupScaleFieldset.addEventListener('click', (e) => {
+
+    if (e.target.classList[1] === 'scale__control--bigger') {
+      if (picFormPopupScaleBaseVal < 100) {
+        picFormPopupScaleFinalVal = (picFormPopupScaleBaseVal += 25) / 100;
+      }
+    } else if (e.target.classList[1] === 'scale__control--smaller') {
+      if (picFormPopupScaleBaseVal > 25) {
+        picFormPopupScaleFinalVal = (picFormPopupScaleBaseVal -= 25) / 100;
+      }
+    }
+
+    picFormPopupPreview.style.transform = `scale(${picFormPopupScaleFinalVal})`;
+    picFormPopupScaleVal.value = `${picFormPopupScaleFinalVal * 100}%`;
+
+  });
+
+  const picFormPopupEffectsList = document.querySelectorAll('#upload-select-image .effects__list input');
+
+  picFormPopupEffectsList.forEach((el) => {
+
+    el.addEventListener('click', (e) => {
+      picFormPopupPreview.removeAttribute('class');
+      picFormPopupPreview.classList.add(`effects__preview--${e.target.value}`);
+    });
+
+  });
+
 };
 
 showUploadPicForm();
