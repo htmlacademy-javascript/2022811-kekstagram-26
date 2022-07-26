@@ -29,25 +29,6 @@ export const showUploadPicForm = () => {
     }
   });
 
-  picFormPopupUploadBtn.addEventListener('submit', (e) => {
-
-    const re = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
-    const picFormPopupHashtagsVal = picFormPopupHashtags.value.split(' ');
-
-    if (picFormPopupHashtagsVal.length > 0 && picFormPopupHashtagsVal.length <= 5) {
-      picFormPopupHashtagsVal.forEach((el) => {
-        if (re.test(el) === false) {
-          e.preventDefault();
-        }
-      });
-    }
-
-    if (picFormPopupDesc < 2 || picFormPopupDesc > 140) {
-      e.preventDefault();
-    }
-
-  });
-
   const picFormPopupScaleFieldset = document.querySelector('#upload-select-image .img-upload__scale');
   const picFormPopupScaleVal = document.querySelector('#upload-select-image .scale__control--value');
   let picFormPopupScaleBaseVal = Number(picFormPopupScaleVal.value.slice(0, -1));
@@ -81,6 +62,54 @@ export const showUploadPicForm = () => {
 
   });
 
-};
+  picFormPopupUploadBtn.addEventListener('submit', (e) => {
 
-showUploadPicForm();
+    e.preventDefault();
+
+    const re = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
+    const picFormPopupHashtagsVal = picFormPopupHashtags.value.split(' ');
+
+    if (picFormPopupHashtagsVal.length > 0 && picFormPopupHashtagsVal.length <= 5) {
+      picFormPopupHashtagsVal.forEach((el) => {
+        if (re.test(el) === false) {
+          return;
+        }
+      });
+    }
+
+    if (picFormPopupDesc < 2 || picFormPopupDesc > 140) {
+      return;
+    }
+
+
+    const successPopup = document.querySelector('.success');
+    
+    const formData = new FormData(picForm);
+    const data = {
+      filename: formData.get('filename'),
+      scale: formData.get('scale'),
+      effect: picFormPopupPreview.getAttribute('class'),
+      hashtags: formData.get('hashtags'),
+      description: formData.get('description'),
+    };
+
+    fetch('https://26.javascript.pages.academy/kekstagram', {
+        method: 'POST',
+        body: data
+    })
+    .then((response) => {
+      if (response.ok) {
+        return response;
+      }
+      throw new Error(`${response.status} — ${response.statusText}`);
+    })
+    .then(response => {
+      successPopup.classList.remove('hidden');
+    })
+    .catch((error) => console.log(error))
+
+
+  });
+
+
+};
