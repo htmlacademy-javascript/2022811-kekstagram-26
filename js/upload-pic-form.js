@@ -18,9 +18,9 @@ export const showUploadPicForm = () => {
     document.body.classList.remove('modal-open');
   };
 
-  picFormUploadFile.addEventListener('change', () => {
+  picFormUploadFile.addEventListener('change', (e) => {
     picFormPopupOpen();
-    picFormPopupPreview.setAttribute('src', URL.createObjectURL(event.target.files[0]));
+    picFormPopupPreview.setAttribute('src', URL.createObjectURL(e.target.files[0]));
   });
 
   picFormPopupCloseBtn.addEventListener('click', picFormPopupClose);
