@@ -1,2 +1,3 @@
-import './gallery.js';
-import './upload-pic-form.js';
+import './render-output-pic.js';
+import { showUploadPicForm } from './upload-pic-form.js';
+showUploadPicForm();

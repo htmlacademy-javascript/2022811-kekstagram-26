@@ -1,6 +1,4 @@
-import { picDescArr } from './data.js';
-
-export const renderOutputPicPopup = () => {
+export const renderOutputPicPopup = (data) => {
 
   const picThumb = document.querySelectorAll('.picture');
   const picPopup = document.querySelector('.big-picture');
@@ -18,7 +16,7 @@ export const renderOutputPicPopup = () => {
       picPopup.classList.remove('hidden');
 
       const picThumbID = Number(el.getAttribute('data-id'));
-      const picDescArrResult = picDescArr.find((elArrRes) => elArrRes.id === picThumbID);
+      const picDescArrResult = data.find((elArrRes) => elArrRes.id === picThumbID);
 
       picPopupImg.src = picDescArrResult.url;
       picPopupDesc.textContent = picDescArrResult.description;

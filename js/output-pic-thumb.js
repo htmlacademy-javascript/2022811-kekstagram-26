@@ -1,11 +1,9 @@
-import { picDescArr } from './data.js';
-
-export const renderOutputPicThumb = () => {
+export const renderOutputPicThumb = (data) => {
 
   const picFragment = document.createDocumentFragment();
   const picContainer = document.querySelector('.pictures');
 
-  picDescArr.forEach((el) => {
+  data.forEach((el) => {
 
     const picTagA = document.createElement('a');
     picTagA.setAttribute('href', '#');
