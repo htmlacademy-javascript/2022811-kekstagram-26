@@ -7,27 +7,23 @@ export const showUploadPicForm = () => {
   const picFormPopupPreview = document.querySelector('#upload-select-image .img-upload__overlay img');
   const picFormPopupHashtags = document.querySelector('#upload-select-image .text__hashtags');
   const picFormPopupDesc = document.querySelector('#upload-select-image .text__description');
-  const picFormPopupUploadBtn = document.getElementById('upload-submit');
 
-  picFormUploadFile.addEventListener('change', () => {
+  const picFormPopupOpen = () => {
     picFormPopup.classList.remove('hidden');
     document.body.classList.add('modal-open');
-    picFormPopupPreview.setAttribute('src', URL.createObjectURL(event.target.files[0]));
-  });
+  };
 
   const picFormPopupClose = () => {
     picFormPopup.classList.add('hidden');
     document.body.classList.remove('modal-open');
-    picForm.reset();
   };
 
-  picFormPopupCloseBtn.addEventListener('click', picFormPopupClose);
-
-  document.addEventListener('keyup', (e) => {
-    if (e.key === 'Escape') {
-      picFormPopupClose();
-    }
+  picFormUploadFile.addEventListener('change', () => {
+    picFormPopupOpen();
+    picFormPopupPreview.setAttribute('src', URL.createObjectURL(event.target.files[0]));
   });
+
+  picFormPopupCloseBtn.addEventListener('click', picFormPopupClose);
 
   const picFormPopupScaleFieldset = document.querySelector('#upload-select-image .img-upload__scale');
   const picFormPopupScaleVal = document.querySelector('#upload-select-image .scale__control--value');
@@ -62,7 +58,36 @@ export const showUploadPicForm = () => {
 
   });
 
-  picFormPopupUploadBtn.addEventListener('submit', (e) => {
+  const successPopup = document.querySelector('.success');
+
+  const successPopupClose = () => {
+    successPopup.classList.add('hidden');
+  };
+
+  const errorPopup = document.querySelector('.error');
+
+  const errorPopupClose = () => {
+    errorPopup.classList.add('hidden');
+  };
+
+  document.addEventListener('click', (e) => {
+    if (successPopup.contains(e.target)) {
+      successPopupClose();
+    } else if (errorPopup.contains(e.target)) {
+      errorPopupClose();
+      picFormPopupOpen();
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    if (e.key === 'Escape') {
+      picFormPopupClose();
+      successPopupClose();
+      errorPopupClose();
+    }
+  });
+
+  picForm.addEventListener('submit', (e) => {
 
     e.preventDefault();
 
@@ -70,46 +95,40 @@ export const showUploadPicForm = () => {
     const picFormPopupHashtagsVal = picFormPopupHashtags.value.split(' ');
 
     if (picFormPopupHashtagsVal.length > 0 && picFormPopupHashtagsVal.length <= 5) {
-      picFormPopupHashtagsVal.forEach((el) => {
+
+      for (const el of picFormPopupHashtagsVal) {
         if (re.test(el) === false) {
           return;
         }
-      });
+      }
+
     }
 
     if (picFormPopupDesc < 2 || picFormPopupDesc > 140) {
       return;
     }
 
-
-    const successPopup = document.querySelector('.success');
-    
-    const formData = new FormData(picForm);
-    const data = {
-      filename: formData.get('filename'),
-      scale: formData.get('scale'),
-      effect: picFormPopupPreview.getAttribute('class'),
-      hashtags: formData.get('hashtags'),
-      description: formData.get('description'),
-    };
-
     fetch('https://26.javascript.pages.academy/kekstagram', {
-        method: 'POST',
-        body: data
+      method: 'POST',
+      body: new FormData(picForm),
     })
-    .then((response) => {
-      if (response.ok) {
-        return response;
-      }
-      throw new Error(`${response.status} — ${response.statusText}`);
-    })
-    .then(response => {
-      successPopup.classList.remove('hidden');
-    })
-    .catch((error) => console.log(error))
-
+      .then((response) => {
+        if (response.ok) {
+          return response;
+        }
+        throw new Error(`${response.status} — ${response.statusText}`);
+      })
+      .then(() => {
+        picFormPopupClose();
+        picFormPopupPreview.removeAttribute('class');
+        successPopup.classList.remove('hidden');
+        picForm.reset();
+      })
+      .catch(() => {
+        picFormPopupClose();
+        errorPopup.classList.remove('hidden');
+      });
 
   });
-
 
 };

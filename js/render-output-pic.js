@@ -12,4 +12,4 @@ fetch('https://26.javascript.pages.academy/kekstagram/data')
   .then((data) => {
     renderOutputPicThumb(data);
     renderOutputPicPopup(data);
-  })
+  });
