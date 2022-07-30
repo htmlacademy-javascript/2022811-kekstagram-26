@@ -9,11 +9,14 @@ export const renderOutputPicPopup = (data) => {
   const picPopupCommentsCount= document.querySelector('.big-picture__social .social__comment-count');
   const picPopupComments= document.querySelector('.big-picture__social .social__comments');
 
+  const TAG_IMAGE_WIDTH = 35;
+  const TAG_IMAGE_HEIGHT = 35;
+
   picThumb.forEach((el) => {
 
     el.addEventListener('click', () => {
 
-      picPopup.classList.remove('hidden');
+      openPicPopup();
 
       const picThumbID = Number(el.getAttribute('data-id'));
       const picDescArrResult = data.find((elArrRes) => elArrRes.id === picThumbID);
@@ -33,8 +36,8 @@ export const renderOutputPicPopup = (data) => {
         picPopupCommentTagImg.classList.add('social__picture');
         picPopupCommentTagImg.setAttribute('src', elArrResComm.avatar);
         picPopupCommentTagImg.setAttribute('alt', elArrResComm.name);
-        picPopupCommentTagImg.setAttribute('width', '35');
-        picPopupCommentTagImg.setAttribute('height', '35');
+        picPopupCommentTagImg.setAttribute('width', TAG_IMAGE_WIDTH);
+        picPopupCommentTagImg.setAttribute('height', TAG_IMAGE_HEIGHT);
         picPopupCommentTagLi.append(picPopupCommentTagImg);
 
         const picPopupCommentTagP = document.createElement('p');
@@ -48,16 +51,22 @@ export const renderOutputPicPopup = (data) => {
 
   });
 
-  const picPopupClose = () => {
-    picPopup.classList.add('hidden');
-  };
-
-  picPopupIcoClose.addEventListener('click', picPopupClose);
-
-  document.addEventListener('keyup', (e) => {
+  function onPicPopupEscapeKeydown(e) {
     if (e.key === 'Escape') {
-      picPopupClose();
+      closePicPopup();
     }
-  });
+  }
+
+  function openPicPopup() {
+    picPopup.classList.remove('hidden');
+    document.addEventListener('keyup', onPicPopupEscapeKeydown);
+  }
+
+  function closePicPopup() {
+    picPopup.classList.add('hidden');
+    document.removeEventListener('keyup', onPicPopupEscapeKeydown);
+  }
+
+  picPopupIcoClose.addEventListener('click', closePicPopup);
 
 };

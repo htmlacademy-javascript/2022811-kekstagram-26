@@ -8,22 +8,25 @@ export const showUploadPicForm = () => {
   const picFormPopupHashtags = document.querySelector('#upload-select-image .text__hashtags');
   const picFormPopupDesc = document.querySelector('#upload-select-image .text__description');
 
-  const picFormPopupOpen = () => {
+  function openPicFormPopup() {
     picFormPopup.classList.remove('hidden');
     document.body.classList.add('modal-open');
-  };
+    document.addEventListener('keyup', onPicFormPopupEscapeKeydown);
+  }
 
-  const picFormPopupClose = () => {
+  function closePicFormPopup() {
     picFormPopup.classList.add('hidden');
     document.body.classList.remove('modal-open');
-  };
+    resetPicForm();
+    document.removeEventListener('keyup', onPicFormPopupEscapeKeydown);
+  }
 
   picFormUploadFile.addEventListener('change', (e) => {
-    picFormPopupOpen();
+    openPicFormPopup();
     picFormPopupPreview.setAttribute('src', URL.createObjectURL(e.target.files[0]));
   });
 
-  picFormPopupCloseBtn.addEventListener('click', picFormPopupClose);
+  picFormPopupCloseBtn.addEventListener('click', closePicFormPopup);
 
   const picFormPopupScaleFieldset = document.querySelector('#upload-select-image .img-upload__scale');
   const picFormPopupScaleVal = document.querySelector('#upload-select-image .scale__control--value');
@@ -49,10 +52,14 @@ export const showUploadPicForm = () => {
 
   const picFormPopupEffectsList = document.querySelectorAll('#upload-select-image .effects__list input');
 
+  function removeAttrClassPicFormPopup() {
+    picFormPopupPreview.removeAttribute('class');
+  }
+
   picFormPopupEffectsList.forEach((el) => {
 
     el.addEventListener('click', (e) => {
-      picFormPopupPreview.removeAttribute('class');
+      removeAttrClassPicFormPopup();
       picFormPopupPreview.classList.add(`effects__preview--${e.target.value}`);
     });
 
@@ -60,30 +67,57 @@ export const showUploadPicForm = () => {
 
   const successPopup = document.querySelector('.success');
 
-  const successPopupClose = () => {
+  function openSuccessPopup() {
+    successPopup.classList.remove('hidden');
+    document.addEventListener('keyup', onSuccessPopupEscapeKeydown);
+  }
+
+  function closeSuccessPopup() {
     successPopup.classList.add('hidden');
-  };
+    document.removeEventListener('keyup', onSuccessPopupEscapeKeydown);
+  }
+
+  function onSuccessPopupEscapeKeydown(e) {
+    if (e.key === 'Escape') {
+      closeSuccessPopup();
+    }
+  }
 
   const errorPopup = document.querySelector('.error');
 
-  const errorPopupClose = () => {
+  function openErrorPopup() {
+    errorPopup.classList.remove('hidden');
+    document.addEventListener('keyup', onErrorPopupEscapeKeydown);
+  }
+
+  function closeErrorPopup() {
     errorPopup.classList.add('hidden');
-  };
+    document.removeEventListener('keyup', onErrorPopupEscapeKeydown);
+  }
+
+  function onErrorPopupEscapeKeydown(e) {
+    if (e.key === 'Escape') {
+      closeErrorPopup();
+    }
+  }
+
+  function resetPicForm() {
+    picForm.reset();
+    removeAttrClassPicFormPopup();
+  }
+
+  function onPicFormPopupEscapeKeydown(e) {
+    if (e.key === 'Escape') {
+      closePicFormPopup();
+    }
+  }
 
   document.addEventListener('click', (e) => {
     if (successPopup.contains(e.target)) {
-      successPopupClose();
+      closeSuccessPopup();
     } else if (errorPopup.contains(e.target)) {
-      errorPopupClose();
-      picFormPopupOpen();
-    }
-  });
-
-  document.addEventListener('keyup', (e) => {
-    if (e.key === 'Escape') {
-      picFormPopupClose();
-      successPopupClose();
-      errorPopupClose();
+      closeErrorPopup();
+      openPicFormPopup();
     }
   });
 
@@ -119,14 +153,14 @@ export const showUploadPicForm = () => {
         throw new Error(`${response.status} — ${response.statusText}`);
       })
       .then(() => {
-        picFormPopupClose();
+        closePicFormPopup();
         picFormPopupPreview.removeAttribute('class');
-        successPopup.classList.remove('hidden');
-        picForm.reset();
+        openSuccessPopup();
+        resetPicForm();
       })
       .catch(() => {
-        picFormPopupClose();
-        errorPopup.classList.remove('hidden');
+        closePicFormPopup();
+        openErrorPopup();
       });
 
   });
