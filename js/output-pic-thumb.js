@@ -3,6 +3,9 @@ export const renderOutputPicThumb = (data) => {
   const picFragment = document.createDocumentFragment();
   const picContainer = document.querySelector('.pictures');
 
+  const TAG_IMAGE_WIDTH = 182;
+  const TAG_IMAGE_HEIGHT = 182;
+
   data.forEach((el) => {
 
     const picTagA = document.createElement('a');
@@ -13,8 +16,8 @@ export const renderOutputPicThumb = (data) => {
     const picTagImg = document.createElement('img');
     picTagImg.classList.add('picture__img');
     picTagImg.setAttribute('src', el.url);
-    picTagImg.setAttribute('width', '182');
-    picTagImg.setAttribute('height', '182');
+    picTagImg.setAttribute('width', TAG_IMAGE_WIDTH);
+    picTagImg.setAttribute('height', TAG_IMAGE_HEIGHT);
     picTagImg.setAttribute('alt', el.description);
     picTagA.append(picTagImg);
 

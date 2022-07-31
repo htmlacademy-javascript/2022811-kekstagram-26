@@ -16,7 +16,7 @@ export const renderOutputPicPopup = (data) => {
 
     el.addEventListener('click', () => {
 
-      openPicPopup();
+      onPicPopupOpen();
 
       const picThumbID = Number(el.getAttribute('data-id'));
       const picDescArrResult = data.find((elArrRes) => elArrRes.id === picThumbID);
@@ -53,20 +53,20 @@ export const renderOutputPicPopup = (data) => {
 
   function onPicPopupEscapeKeydown(e) {
     if (e.key === 'Escape') {
-      closePicPopup();
+      onPicPopupClose();
     }
   }
 
-  function openPicPopup() {
+  function onPicPopupOpen() {
     picPopup.classList.remove('hidden');
     document.addEventListener('keyup', onPicPopupEscapeKeydown);
   }
 
-  function closePicPopup() {
+  function onPicPopupClose() {
     picPopup.classList.add('hidden');
     document.removeEventListener('keyup', onPicPopupEscapeKeydown);
   }
 
-  picPopupIcoClose.addEventListener('click', closePicPopup);
+  picPopupIcoClose.addEventListener('click', onPicPopupClose);
 
 };
