@@ -6,42 +6,53 @@ export const showUploadPicForm = () => {
   const picFormPopupCloseBtn = document.getElementById('upload-cancel');
   const picFormPopupPreview = document.querySelector('#upload-select-image .img-upload__overlay img');
   const picFormPopupHashtags = document.querySelector('#upload-select-image .text__hashtags');
-  const picFormPopupDesc = document.querySelector('#upload-select-image .text__description');
 
-  function openPicFormPopup() {
+  function onPicFormPopupOpen() {
     picFormPopup.classList.remove('hidden');
     document.body.classList.add('modal-open');
     document.addEventListener('keyup', onPicFormPopupEscapeKeydown);
   }
 
-  function closePicFormPopup() {
+  function onPicFormPopupClose() {
     picFormPopup.classList.add('hidden');
     document.body.classList.remove('modal-open');
-    resetPicForm();
+    onPicFormReset();
     document.removeEventListener('keyup', onPicFormPopupEscapeKeydown);
   }
 
+  function onPicFormPopupEscapeKeydown(e) {
+    if (e.key === 'Escape') {
+      if (document.activeElement !== picFormPopupHashtags) {
+        onPicFormPopupClose();
+      }
+    }
+  }
+
   picFormUploadFile.addEventListener('change', (e) => {
-    openPicFormPopup();
+    onPicFormPopupOpen();
     picFormPopupPreview.setAttribute('src', URL.createObjectURL(e.target.files[0]));
   });
 
-  picFormPopupCloseBtn.addEventListener('click', closePicFormPopup);
+  picFormPopupCloseBtn.addEventListener('click', onPicFormPopupClose);
 
   const picFormPopupScaleFieldset = document.querySelector('#upload-select-image .img-upload__scale');
   const picFormPopupScaleVal = document.querySelector('#upload-select-image .scale__control--value');
   let picFormPopupScaleBaseVal = Number(picFormPopupScaleVal.value.slice(0, -1));
   let picFormPopupScaleFinalVal;
 
+  const SCALE_BASE_VAL = 100;
+  const SCALE_MIN_VAL = 25;
+  const SCALE_STEP_VAL = 25;
+
   picFormPopupScaleFieldset.addEventListener('click', (e) => {
 
     if (e.target.classList[1] === 'scale__control--bigger') {
-      if (picFormPopupScaleBaseVal < 100) {
-        picFormPopupScaleFinalVal = (picFormPopupScaleBaseVal += 25) / 100;
+      if (picFormPopupScaleBaseVal < SCALE_BASE_VAL) {
+        picFormPopupScaleFinalVal = (picFormPopupScaleBaseVal += SCALE_STEP_VAL) / 100;
       }
     } else if (e.target.classList[1] === 'scale__control--smaller') {
-      if (picFormPopupScaleBaseVal > 25) {
-        picFormPopupScaleFinalVal = (picFormPopupScaleBaseVal -= 25) / 100;
+      if (picFormPopupScaleBaseVal > SCALE_MIN_VAL) {
+        picFormPopupScaleFinalVal = (picFormPopupScaleBaseVal -= SCALE_STEP_VAL) / 100;
       }
     }
 
@@ -67,79 +78,76 @@ export const showUploadPicForm = () => {
 
   const successPopup = document.querySelector('.success');
 
-  function openSuccessPopup() {
+  function onSuccessPopupOpen() {
     successPopup.classList.remove('hidden');
     document.addEventListener('keyup', onSuccessPopupEscapeKeydown);
   }
 
-  function closeSuccessPopup() {
+  function onSuccessPopupClose() {
     successPopup.classList.add('hidden');
     document.removeEventListener('keyup', onSuccessPopupEscapeKeydown);
   }
 
   function onSuccessPopupEscapeKeydown(e) {
     if (e.key === 'Escape') {
-      closeSuccessPopup();
+      onSuccessPopupClose();
     }
   }
 
   const errorPopup = document.querySelector('.error');
 
-  function openErrorPopup() {
+  function onErrorPopupOpen() {
     errorPopup.classList.remove('hidden');
     document.addEventListener('keyup', onErrorPopupEscapeKeydown);
   }
 
-  function closeErrorPopup() {
+  function onErrorPopupClose() {
     errorPopup.classList.add('hidden');
     document.removeEventListener('keyup', onErrorPopupEscapeKeydown);
   }
 
   function onErrorPopupEscapeKeydown(e) {
     if (e.key === 'Escape') {
-      closeErrorPopup();
+      onErrorPopupClose();
     }
   }
 
-  function resetPicForm() {
+  function onPicFormReset() {
     picForm.reset();
     removeAttrClassPicFormPopup();
   }
 
-  function onPicFormPopupEscapeKeydown(e) {
-    if (e.key === 'Escape') {
-      closePicFormPopup();
-    }
-  }
-
   document.addEventListener('click', (e) => {
     if (successPopup.contains(e.target)) {
-      closeSuccessPopup();
+      onSuccessPopupClose();
     } else if (errorPopup.contains(e.target)) {
-      closeErrorPopup();
-      openPicFormPopup();
+      onErrorPopupClose();
+      onPicFormPopupOpen();
     }
   });
+
+  const HASHTAG_MIN_LENGTH = 1;
+  const HASHTAG_MAX_LENGTH = 19;
+  const HASHTAG_MIN_COUNT = 0;
+  const HASHTAG_MAX_COUNT = 5;
 
   picForm.addEventListener('submit', (e) => {
 
     e.preventDefault();
 
-    const re = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
+    const pattern = `^#[A-Za-zА-Яа-яЁё0-9]{${HASHTAG_MIN_LENGTH},${HASHTAG_MAX_LENGTH}}`;
+    const regex = new RegExp(pattern);
+
     const picFormPopupHashtagsVal = picFormPopupHashtags.value.split(' ');
 
-    if (picFormPopupHashtagsVal.length > 0 && picFormPopupHashtagsVal.length <= 5) {
+    if (picFormPopupHashtagsVal.length > HASHTAG_MIN_COUNT && picFormPopupHashtagsVal.length <= HASHTAG_MAX_COUNT) {
 
       for (const el of picFormPopupHashtagsVal) {
-        if (re.test(el) === false) {
+        if (regex.test(el) === false) {
           return;
         }
       }
 
-    }
-
-    if (picFormPopupDesc < 2 || picFormPopupDesc > 140) {
-      return;
     }
 
     fetch('https://26.javascript.pages.academy/kekstagram', {
@@ -153,14 +161,14 @@ export const showUploadPicForm = () => {
         throw new Error(`${response.status} — ${response.statusText}`);
       })
       .then(() => {
-        closePicFormPopup();
+        onPicFormPopupClose();
         picFormPopupPreview.removeAttribute('class');
-        openSuccessPopup();
-        resetPicForm();
+        onSuccessPopupOpen();
+        onPicFormReset();
       })
       .catch(() => {
-        closePicFormPopup();
-        openErrorPopup();
+        onPicFormPopupClose();
+        onErrorPopupOpen();
       });
 
   });
